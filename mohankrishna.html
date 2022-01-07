@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .outerDiv {
+        display: flex;
+        justify-content: center;
+        height: 480px;
+        align-items: center;
+      }
+      .innerDiv {
+        height: 300px;
+        width: 200px;
+      }
+      .firstRow {
+        position: relative;
+        height: 145px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+      .secondRow {
+        position: relative;
+        height: 105px;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .buttons {
+        height: 60px;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+      }
+      .ball {
+        height: 60px;
+        width: 60px;
+        border-radius: 50%;
+      }
+      .button {
+        height: 30px;
+        width: 65px;
+        background-color: #007475;
+        color: white;
+      }
+      /* no need to mention zindex:0; to avoid empty css class warning just added */
+      .circle4 {
+        z-index: 0;
+      }
+      .circle1 {
+        z-index: 10;
+      }
+      .circle2 {
+        position: absolute;
+        right: 0;
+        z-index: 9;
+      }
+      .circle3 {
+        position: relative;
+        z-index: 8;
+      }
+      .circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50px;
+        transition: all 1s ease 0s;
+      }
+      .rectangle4 {
+        position: absolute;
+        height: 205px;
+      }
+      .rectangle1 {
+        width: 205px;
+      }
+      .rectangle2 {
+        height: 205.5px;
+      }
+      .rectangle3 {
+        width: 205px;
+      }
+      .absoluteDiv {
+        position: relative;
+      }
+      .reverseDir {
+        display: flex;
+        flex-direction: column-reverse;
+        position: absolute;
+        bottom: 45px;
+      }
+      .red {
+        background-color: #ff4c1f;
+      }
+      .yellow {
+        background-color: #ffec4f;
+      }
+      .green {
+        background-color: #29722b;
+      }
+      .skyblue {
+        background-color: #25acf6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="outerDiv">
+      <div class="innerDiv">
+        <div class="absoluteDiv">
+          <div class="firstRow">
+            <div class="circle circle1"></div>
+            <div class="circle circle2"></div>
+          </div>
+          <div class="secondRow">
+            <div class="circle circle3"></div>
+          </div>
+          <div class="reverseDir">
+            <div class="circle circle4"></div>
+          </div>
+        </div>
+        <div class="buttons">
+          <button class="button" id="start">Start</button>
+          <button class="button" id="stop">Stop</button>
+        </div>
+      </div>
+    </div>
+    <script>
+
+      //classes of colors
+      let colorsArray = ["red", "yellow", "skyblue", "green"];
+
+      var startButton = document.getElementById("start");
+      var stopButton = document.getElementById("stop");
+
+      //start and stop event listeners
+      stopButton.addEventListener("click", stopTimer);
+      startButton.addEventListener("click", initialStart);
+
+      var circle1 = document.querySelector(".circle1");
+      var circle2 = document.querySelector(".circle2");
+      var circle3 = document.querySelector(".circle3");
+      var circle4 = document.querySelector(".circle4");
+
+      let timer = false;
+
+      // colorChange variable is to track when to change the color
+      let colorChange = 0;
+
+      //to add colors on load
+      addColor();
+
+      //to start the initial color switch and size change
+      function initialStart() {
+        if (!timer) {
+          elementColorSwitch();
+          colorChange = 1;
+          toggleRectangle();
+          startTimer();
+        }
+      }
+
+      //function to add color
+      function addColor() {
+        circle1.classList.add(colorsArray[0]);
+        circle2.classList.add(colorsArray[1]);
+        circle3.classList.add(colorsArray[2]);
+        circle4.classList.add(colorsArray[3]);
+      }
+
+      //function to remove color
+      function removeColor() {
+        circle1.classList.remove(colorsArray[0]);
+        circle2.classList.remove(colorsArray[1]);
+        circle3.classList.remove(colorsArray[2]);
+        circle4.classList.remove(colorsArray[3]);
+      }
+
+      //function to start timer, repeat the switching of color and shape
+      function startTimer() {
+        timer = setInterval(() => {
+          toggleRectangle();
+          colorChange += 1;
+          if (colorChange === 2) colorChange = 0;
+        }, 1000);
+      }
+
+      //function to stop the timer
+      function stopTimer() {
+        clearInterval(timer);
+        timer = false;
+      }
+
+
+      //function to change shapes and colors
+      function toggleRectangle() {
+        if (colorChange === 0) {
+          elementColorSwitch();
+        }
+        circle1.classList.toggle("rectangle1");
+        circle2.classList.toggle("rectangle2");
+        circle3.classList.toggle("rectangle3");
+        circle4.classList.toggle("rectangle4");
+      }
+
+      //function to switch colors from one element to another element
+      function elementColorSwitch() {
+        removeColor();
+        let tempArray = [...colorsArray];
+        tempArray.shift();
+        tempArray.push(colorsArray[0]);
+        colorsArray = [...tempArray];
+        addColor();
+      }
+    </script>
+  </body>
+</html>
